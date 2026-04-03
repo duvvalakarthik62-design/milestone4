@@ -1,0 +1,57 @@
+# Bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+env/
+
+# Environment & secrets
+.env
+.env.*
+!.env.example
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# Testing / coverage
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.nox/
+
+# Type checkers / linters (local)
+.mypy_cache/
+.ruff_cache/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# IDE / OS
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# Project: local SQLite DB (recreated by app)
+**/Database/*.db
+
+# Project: trained artifacts (run milestone4/src/train_model.py to regenerate)
+**/Models/*.pkl
+**/Vectorizers/*.pkl
+
+# NLTK data downloaded at runtime (optional; usually in user home)
+nltk_data/
+
+# Logs
+*.log

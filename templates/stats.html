@@ -4,49 +4,12 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Stats — Fake Job Detector</title>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="{{ url_for('static', filename='app.css') }}"/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
-<style>
-*{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --bg:#0d0d0f;--surface:#16161a;--border:#2a2a32;
-  --accent:#ff4757;--accent2:#2ed573;--text:#e8e8f0;--muted:#6b6b80;
-  --font-head:'Syne',sans-serif;--font-mono:'DM Mono',monospace;
-}
-body{background:var(--bg);color:var(--text);font-family:var(--font-mono);min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:40px 20px;}
-body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");opacity:.4;pointer-events:none;z-index:0;}
-
-nav{position:relative;z-index:1;width:100%;max-width:860px;display:flex;gap:6px;margin-bottom:40px;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:6px;}
-nav a{flex:1;text-align:center;text-decoration:none;color:var(--muted);font-family:var(--font-head);font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:9px 12px;border-radius:8px;transition:all .2s;}
-nav a:hover{color:var(--text);}
-nav a.active{background:var(--border);color:var(--text);}
-
-.wrap{position:relative;z-index:1;width:100%;max-width:860px;animation:fadeIn .4s ease;}
-@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-
-h1{font-family:var(--font-head);font-size:36px;font-weight:800;letter-spacing:-.02em;margin-bottom:28px;}
-h1 span{color:var(--accent);}
-
-.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px;}
-.stat{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px;text-align:center;}
-.stat-num{font-family:var(--font-head);font-size:32px;font-weight:800;}
-.stat-num.red{color:var(--accent);}
-.stat-num.green{color:var(--accent2);}
-.stat-num.yellow{color:#ffa502;}
-.stat-label{font-size:11px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-top:6px;}
-
-.charts-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;}
-.card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:24px;}
-.card h2{font-family:var(--font-head);font-size:13px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:20px;}
-.chart-container{position:relative;height:240px;}
-.chart-container-tall{position:relative;height:260px;}
-
-.empty-state{text-align:center;padding:40px 20px;color:var(--muted);font-size:14px;}
-</style>
 </head>
 <body>
 
-<nav>
+<nav class="app-nav">
   <a href="/">Detector</a>
   <a href="/history">History</a>
   <a href="/stats" class="active">Stats</a>
@@ -54,7 +17,7 @@ h1 span{color:var(--accent);}
 </nav>
 
 <div class="wrap">
-  <h1>Analytics <span>Dashboard</span></h1>
+  <h1 class="stats-page-title">Analytics <span>Dashboard</span></h1>
 
   <div class="stats-grid">
     <div class="stat">
@@ -107,32 +70,33 @@ h1 span{color:var(--accent);}
   var fakeData   = _d.fakeData;
   var realData   = _d.realData;
 
-  Chart.defaults.color = '#6b6b80';
-  Chart.defaults.font  = { family: "'DM Mono', monospace", size: 11 };
+  var colMuted = '#6b7280';
+  var colReal = '#059669';
+  var colFake = '#dc2626';
 
-  // Donut chart
+  Chart.defaults.color = colMuted;
+  Chart.defaults.font  = { family: "'Plus Jakarta Sans', sans-serif", size: 12, weight: '500' };
+
   new Chart(document.getElementById('donut-chart'), {
     type: 'doughnut',
     data: {
       labels: ['Real Jobs', 'Fake Jobs'],
       datasets: [{
         data: [_d.real, _d.fake],
-        backgroundColor: ['rgba(46,213,115,0.8)', 'rgba(255,71,87,0.8)'],
-        borderColor: ['#2ed573', '#ff4757'],
-        borderWidth: 1,
-        hoverOffset: 6
+        backgroundColor: ['rgba(5, 150, 105, 0.85)', 'rgba(220, 38, 38, 0.85)'],
+        borderColor: [colReal, colFake],
+        borderWidth: 2,
+        hoverOffset: 8
       }]
     },
     options: {
       responsive: true, maintainAspectRatio: false,
-      cutout: '68%',
+      cutout: '62%',
       plugins: {
-        legend: { position: 'bottom', labels: { padding: 16, usePointStyle: true, pointStyleWidth: 8 } }
+        legend: { position: 'bottom', labels: { padding: 18, usePointStyle: true, pointStyleWidth: 10 } }
       }
     }
   });
-
-  // Line chart and bar chart data already in timeLabels / fakeData / realData
 
   new Chart(document.getElementById('line-chart'), {
     type: 'line',
@@ -142,53 +106,52 @@ h1 span{color:var(--accent);}
         {
           label: 'Fake',
           data: fakeData,
-          borderColor: '#ff4757',
-          backgroundColor: 'rgba(255,71,87,0.1)',
-          borderWidth: 2, fill: true, tension: 0.4, pointRadius: 3
+          borderColor: colFake,
+          backgroundColor: 'rgba(220, 38, 38, 0.12)',
+          borderWidth: 2.5, fill: true, tension: 0.35, pointRadius: 4, pointBackgroundColor: '#fff'
         },
         {
           label: 'Real',
           data: realData,
-          borderColor: '#2ed573',
-          backgroundColor: 'rgba(46,213,115,0.1)',
-          borderWidth: 2, fill: true, tension: 0.4, pointRadius: 3
+          borderColor: colReal,
+          backgroundColor: 'rgba(5, 150, 105, 0.12)',
+          borderWidth: 2.5, fill: true, tension: 0.35, pointRadius: 4, pointBackgroundColor: '#fff'
         }
       ]
     },
     options: {
       responsive: true, maintainAspectRatio: false,
       scales: {
-        x: { grid: { color: 'rgba(255,255,255,.05)' }, ticks: { maxTicksLimit: 6 } },
-        y: { grid: { color: 'rgba(255,255,255,.05)' }, beginAtZero: true, ticks: { stepSize: 1 } }
+        x: { grid: { color: 'rgba(17, 24, 39, .06)' }, ticks: { maxTicksLimit: 6 } },
+        y: { grid: { color: 'rgba(17, 24, 39, .06)' }, beginAtZero: true, ticks: { stepSize: 1 } }
       },
-      plugins: { legend: { position: 'bottom', labels: { padding: 16, usePointStyle: true, pointStyleWidth: 8 } } }
+      plugins: { legend: { position: 'bottom', labels: { padding: 18, usePointStyle: true, pointStyleWidth: 10 } } }
     }
   });
 
-  // Bar chart — daily totals
   new Chart(document.getElementById('bar-chart'), {
     type: 'bar',
     data: {
       labels: timeLabels,
       datasets: [
-        { label: 'Fake', data: fakeData, backgroundColor: 'rgba(255,71,87,0.75)', borderRadius: 4, borderSkipped: false },
-        { label: 'Real', data: realData, backgroundColor: 'rgba(46,213,115,0.75)', borderRadius: 4, borderSkipped: false }
+        { label: 'Fake', data: fakeData, backgroundColor: 'rgba(220, 38, 38, 0.78)', borderRadius: 8, borderSkipped: false },
+        { label: 'Real', data: realData, backgroundColor: 'rgba(5, 150, 105, 0.78)', borderRadius: 8, borderSkipped: false }
       ]
     },
     options: {
       responsive: true, maintainAspectRatio: false,
       scales: {
-        x: { stacked: true, grid: { color: 'rgba(255,255,255,.05)' } },
-        y: { stacked: true, grid: { color: 'rgba(255,255,255,.05)' }, beginAtZero: true }
+        x: { stacked: true, grid: { color: 'rgba(17, 24, 39, .06)' } },
+        y: { stacked: true, grid: { color: 'rgba(17, 24, 39, .06)' }, beginAtZero: true }
       },
-      plugins: { legend: { position: 'bottom', labels: { padding: 16, usePointStyle: true, pointStyleWidth: 8 } } }
+      plugins: { legend: { position: 'bottom', labels: { padding: 18, usePointStyle: true, pointStyleWidth: 10 } } }
     }
   });
   </script>
 
   {% else %}
   <div class="card">
-    <div class="empty-state">No data yet. <a href="/" style="color:var(--text);text-underline-offset:3px;">Analyze some job postings</a> to see stats here.</div>
+    <div class="empty-state">No data yet. <a href="/" style="color:var(--accent);font-weight:700;text-underline-offset:3px;">Analyze some job postings</a> to see stats here.</div>
   </div>
   {% endif %}
 </div>

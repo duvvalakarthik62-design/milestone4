@@ -164,7 +164,10 @@ def batch_download():
     output = io.StringIO()
     writer = csv.DictWriter(output, fieldnames=["description", "prediction"])
     writer.writeheader()
-    writer.writerows(_batch_results)
+    for row in _batch_results:
+        writer.writerow(
+            {"description": row.get("text", ""), "prediction": row["prediction"]}
+        )
 
     return Response(
         output.getvalue(),
